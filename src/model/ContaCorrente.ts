@@ -1,6 +1,6 @@
 import { Conta } from "./Conta";
-import { formatadorMoeda } from "../util/FormatadorMoeda";
-import { colors } from "../util/Colors";
+import { formatadorMoeda } from "../util/Currency";
+import { Colors } from "../util/Colors";
 
 export class ContaCorrente extends Conta {
 
@@ -31,17 +31,16 @@ export class ContaCorrente extends Conta {
     public sacar(valor: number): boolean {
 
         if(valor <= 0) {
-            console.log(colors.fg.red, "\n Operação não pode ser concluída - O valor deve ser positivo.", colors.reset);
+            console.log(Colors.fg.red, "\n Operação não pode ser concluída - O valor deve ser positivo.", Colors.reset);
             return false;
         }
 
         if(valor > (this.saldo + this._limite)){
-            console.log(colors.fg.red,"\nOperação não pode ser concluída- Saldo Insuficiente!", colors.reset);
+            console.log(Colors.fg.red,"\nOperação não pode ser concluída- Saldo Insuficiente!", Colors.reset);
             return false;
         }
 
         this.saldo -= valor;
-        console.log(colors.fg.red, "\nOperação não pode ser concluída - Saldo Insuficiente!", colors.reset);
         return true;
     }
 

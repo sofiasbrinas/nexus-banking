@@ -1,5 +1,5 @@
-import { colors } from "../util/Colors";
-import { formatadorMoeda } from "../util/FormatadorMoeda";
+import { Colors } from "../util/Colors";
+import { formatadorMoeda } from "../util/Currency";
 
 export class Conta {
 
@@ -68,28 +68,26 @@ export class Conta {
 	public sacar(valor: number): boolean {
 
         if(valor <= 0){
-            console.log(colors.fg.red, "\nOperação não pode ser concluída - O valor deve ser positivo", colors.reset);
+            console.log(Colors.fg.red, "\nOperação não pode ser concluída - O valor deve ser positivo", Colors.reset);
             return false;
         }
 
         if (valor > this._saldo) {
-            console.log(colors.fg.red, "\nOperação não pode ser concluída - Saldo Insuficiente!", colors.reset);
+            console.log(Colors.fg.red, "\nOperação não pode ser concluída - Saldo Insuficiente!", Colors.reset);
             return false;
         }
 
         this._saldo -= valor;
-        console.log(colors.fg.green, `\nSaque no valor de ${formatadorMoeda.format(valor)} efetuado com sucesso.`, colors.reset);
+        console.log(Colors.fg.green, `\nSaque no valor de ${formatadorMoeda.format(valor)} efetuado com sucesso.`, Colors.reset);
         return true;
     }
 
     public depositar(valor: number): void {
 
         if(valor <= 0){
-            console.log(colors.fg.red,"\nOperação não pode ser concluída - O valor deve ser positivo.", colors.reset);
-        }else{
+            console.log(Colors.fg.red,"\nOperação não pode ser concluída - O valor deve ser positivo.", Colors.reset);
+        }else
         this._saldo =  valor + this._saldo;
-        console.log(colors.fg.green,`\nDepósito no valor de ${formatadorMoeda.format(valor)} efetuado com sucesso.`, colors.reset);
-        }
     }
 
     public visualizar(): void {

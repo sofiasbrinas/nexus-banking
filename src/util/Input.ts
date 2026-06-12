@@ -13,7 +13,7 @@ import * as iconv from 'iconv-lite'
  * - Você digita "João" e a variável recebe "João" corretamente!
  */
 
-export class input {
+export class Input {
 	/** Controla se já detectou o encoding (detecta apenas uma vez) */
 	private static configurado = false
 
