@@ -121,7 +121,6 @@ export class Conta {
         console.log(`║   Tipo da Conta:      ${tipo}`.padEnd(69) + "║");
         console.log(`║   Titular:            ${this._titular}`.padEnd(69) + "║");
         console.log(`║   Saldo:              ${formatadorMoeda.format(this._saldo)}`.padEnd(69) + "║");
-        console.log("╚════════════════════════════════════════════════════════════════════╝\n\n");
         
     }
 }
