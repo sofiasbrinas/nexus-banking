@@ -1,6 +1,6 @@
-import readlinesync = require("readline-sync");
 import { colors } from "./src/util/Colors";
 import { Conta } from "./src/model/Conta";
+import { input } from "./src/util/Input";
 
 export function main() {
 
@@ -59,7 +59,7 @@ export function main() {
         console.log("╚════════════════════════════════════════════════════════════════════╝");
         
         console.log("\nEntre com a ação desejada: ");
-        opcao = parseInt(readlinesync.question("", {limit: /^[0-9]+$/, limitMessage: "Entrada invalida! Por favor, digite apenas numeros."}));
+        opcao = parseInt(input.question("", {limit: /^[0-9]+$/, limitMessage: "Entrada invalida! Por favor, digite apenas numeros."}));
 
         if (opcao == 9) {
             console.log(" \n               Nexus Banking - O" + colors.fg.yellow + " seu futuro " + colors.reset + "começa aqui!");
@@ -143,7 +143,7 @@ console.log("\n═════════════════════�
 function keyPress(): void {
     console.log(colors.reset, "");
     console.log("\nPressione enter para continuar...");
-    readlinesync.prompt();
+    input.prompt();
 }
 
 main();
