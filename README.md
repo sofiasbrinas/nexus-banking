@@ -17,7 +17,7 @@
   <img src="https://img.shields.io/github/last-commit/sofiasbrinas/nexus-banking?style=flat-square" />
   <img src="https://img.shields.io/github/issues/sofiasbrinas/nexus-banking?style=flat-square" />
   <img src="https://img.shields.io/github/issues-pr/sofiasbrinas/nexus-banking?style=flat-square" />
-  <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" alt="Status: Em Desenvolvimento">
+  <img src="https://img.shields.io/badge/status-conclu%C3%ADdo-brightgreen" alt="Status: Concluído">
 </div>
 
 ---
@@ -51,7 +51,8 @@ Este projeto foi estruturado para:
 - Programação Orientada a Objetos (Encapsulamento, Herança, Polimorfismo)
 - Modelagem de domínio orientada a objetos
 - Arquitetura em camadas (**Model, Repository, Controller**)
-- Tipagem forte com **TypeScript**
+- Interfaces TypeScript como contratos de implementação
+- Tipagem forte com **TypeScript** e modo `strict`
 - Separação de responsabilidades
 - Boas práticas de código e organização modular
 - Simulação de regras financeiras com validações de saldo e limite
@@ -69,6 +70,7 @@ Este projeto foi estruturado para:
 | Criar conta bancária            | ✅     |
 | Listar todas as contas          | ✅     |
 | Buscar conta por número         | ✅     |
+| Buscar conta por titular        | ✅     |
 | Atualizar dados da conta        | ✅     |
 | Apagar conta                    | ✅     |
 | Sacar                           | ✅     |
@@ -120,6 +122,33 @@ class ContaPoupanca {
   + set aniversario(value: number) void
   + visualizar() void
 }
+class ContaRepository {
+  <<interface>>
+  + procurarPorNumero(numero: number) void
+  + listarTodas() void
+  + cadastrar(conta: Conta) void
+  + atualizar(conta: Conta) void
+  + deletar(numero: number) void
+  + procurarPorTitular(titular: string) void
+  + sacar(numero: number, valor: number) void
+  + depositar(numero: number, valor: number) void
+  + transferir(numeroOrigem: number, numeroDestino: number, valor: number) void
+}
+class ContaController {
+  - listaContas: Array~Conta~
+  + numero: number
+  + procurarPorNumero(numero: number) void
+  + listarTodas() void
+  + cadastrar(conta: Conta) void
+  + atualizar(conta: Conta) void
+  + deletar(numero: number) void
+  + procurarPorTitular(titular: string) void
+  + sacar(numero: number, valor: number) void
+  + depositar(numero: number, valor: number) void
+  + transferir(numeroOrigem: number, numeroDestino: number, valor: number) void
+  + gerarNumero() number
+  + buscarNoArray(numero: number) Conta
+}
 class Input {
   - configurado: boolean$
   - encodingConsole: string$
@@ -137,6 +166,8 @@ class Input {
 }
 ContaCorrente --|> Conta
 ContaPoupanca --|> Conta
+ContaController ..|> ContaRepository
+ContaController --> Conta
 ```
 
 <br />
@@ -148,17 +179,21 @@ Estrutura organizada para facilitar **manutenção, escalabilidade e leitura té
 ```text
 📦 nexus-banking
  ┣ 📂 docs
- ┃ ┗ 📄 classe_input.md       # Documentação da Classe Input
+ ┃ ┗ 📄 classe_input.md        # Documentação da Classe Input
  ┣ 📂 src
- ┃ ┣ 📂 model                 # Entidades de domínio
- ┃ ┃ ┣ 📄 Conta.ts            # Classe base (Super Classe)
- ┃ ┃ ┣ 📄 ContaCorrente.ts    # Herda Conta, adiciona limite
- ┃ ┃ ┗ 📄 ContaPoupanca.ts    # Herda Conta, adiciona aniversário
- ┃ ┗ 📂 util                  # Utilitários e helpers
- ┃   ┣ 📄 Colors.ts           # Cores ANSI para o terminal
- ┃   ┣ 📄 FormatadorMoeda.ts  # Formatação monetária BRL
- ┃   ┗ 📄 Input.ts            # Leitura de dados com suporte a acentos
- ┣ 📜 Menu.ts                 # Ponto de entrada principal
+ ┃ ┣ 📂 controller             # Regras de aplicação
+ ┃ ┃ ┗ 📄 ContaController.ts   # Implementa ContaRepository
+ ┃ ┣ 📂 model                  # Entidades de domínio
+ ┃ ┃ ┣ 📄 Conta.ts             # Classe base (Super Classe)
+ ┃ ┃ ┣ 📄 ContaCorrente.ts     # Herda Conta, adiciona limite
+ ┃ ┃ ┗ 📄 ContaPoupanca.ts     # Herda Conta, adiciona aniversário
+ ┃ ┣ 📂 repository             # Contrato de persistência
+ ┃ ┃ ┗ 📄 ContaRepository.ts   # Interface com métodos CRUD e bancários
+ ┃ ┗ 📂 util                   # Utilitários e helpers
+ ┃   ┣ 📄 Colors.ts            # Cores ANSI para o terminal
+ ┃   ┣ 📄 Currency.ts          # Formatação monetária BRL
+ ┃   ┗ 📄 Input.ts             # Leitura de dados com suporte a acentos
+ ┣ 📜 Menu.ts                  # Ponto de entrada principal
  ┣ 📜 package.json
  ┗ 📜 tsconfig.json
 ```
@@ -169,14 +204,15 @@ Estrutura organizada para facilitar **manutenção, escalabilidade e leitura té
 
 **Linguagem & Runtime**
 
-- TypeScript
+- TypeScript (modo `strict`, `nodenext`, `esnext`)
 - Node.js
 - ts-node
 
 **Bibliotecas**
 
-- readline-sync — input interativo no terminal
-- iconv-lite — conversão de encoding CP850/UTF-8
+- readline-sync `^1.4.10` — input interativo no terminal
+- iconv-lite `^0.7.2` — conversão de encoding CP850/UTF-8
+- @types/node `^25.9.3` — tipagens do Node.js
 
 **Ferramentas & Qualidade**
 
@@ -216,8 +252,6 @@ ts-node Menu.ts
 
 ## Implementações Futuras
 
-- [ ] Camada Repository (persistência simulada em memória)
-- [ ] Camada Controller (regras de aplicação)
 - [ ] Persistência com banco de dados
 - [ ] Testes automatizados (Jest)
 - [ ] API REST com NestJS

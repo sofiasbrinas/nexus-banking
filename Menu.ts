@@ -53,7 +53,9 @@ export function main() {
 
         if (opcao === 0) {
             console.log(" \n               Nexus Banking - O" + Colors.fg.yellow + " seu futuro " + Colors.reset + "começa aqui!");
+            
             sobre();
+
             process.exit(0);
         }
 
@@ -146,11 +148,11 @@ function criarConta(){
     console.log("Digite o número da agência: ")
     const agencia = Input.questionInt("");
 
-    console.log("Digite o nome do titular: ")
-    const titular = Input.question("");
-
     console.log("Selecione o tipo da conta: ")
     const tipo = Input.keyInSelect(tipoContas, "", { cancel: false}) + 1;
+
+    console.log("Digite o nome do titular: ")
+    const titular = Input.question("");
 
     console.log("Digite o saldo da conta: ")
     const saldo = Input.questionFloat("");
@@ -167,7 +169,7 @@ function criarConta(){
             console.log("Digite o dia do aniversário da conta: ");
             const aniversario = Input.questionInt("");
             contas.cadastrar(new ContaPoupanca(
-                contas.gerarNumero(), agencia,tipo, titular, saldo, aniversario));
+                contas.gerarNumero(), agencia, tipo, titular, saldo, aniversario));
         break;
 
     }
