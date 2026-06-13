@@ -5,8 +5,9 @@
 <br />
 
 <div align="center">
-	<img src="https://i.imgur.com/izFuHID.png" title="source: imgur.com" width="35%"/>
+  <img src="https://i.imgur.com/izFuHID.png" title="source: imgur.com" width="35%"/>
 </div>
+
 <br />
 
 <div align="center">
@@ -16,16 +17,14 @@
   <img src="https://img.shields.io/github/last-commit/sofiasbrinas/nexus-banking?style=flat-square" />
   <img src="https://img.shields.io/github/issues/sofiasbrinas/nexus-banking?style=flat-square" />
   <img src="https://img.shields.io/github/issues-pr/sofiasbrinas/nexus-banking?style=flat-square" />
-  <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" alt="Status: Em Desenvolvimento">
+  <img src="https://img.shields.io/badge/status-conclu%C3%ADdo-brightgreen" alt="Status: Concluído">
 </div>
 
-
-------
+---
 
 <br />
 
-
-O **Nexus Banking** é um projeto **educacional** desenvolvido em **TypeScript**, com foco em **Programação Orientada a Objetos (POO)** e **arquitetura modular**, simulando operações bancárias reais como **CRUD de contas, transferências, depósitos e saques**. O sistema conta com uma interface CLI estilizada com arte ASCII e suporte a cores no terminal.
+O **Nexus Banking** é um projeto **educacional** desenvolvido em **TypeScript**, com foco em **Programação Orientada a Objetos (POO)** e **arquitetura modular**, simulando operações bancárias reais como **CRUD de contas, transferências, depósitos e saques**. O sistema conta com uma interface CLI estilizada com arte ASCII, suporte a cores no terminal e leitura de dados com suporte completo a acentuação no Windows.
 
 **Objetivo:** Demonstrar **organização, domínio técnico, modelagem de domínio e boas práticas de engenharia de software** em um case prático de portfólio.
 
@@ -49,43 +48,44 @@ Este projeto foi estruturado para:
 
 ## Competências Técnicas Demonstradas
 
-
-
 - Programação Orientada a Objetos (Encapsulamento, Herança, Polimorfismo)
 - Modelagem de domínio orientada a objetos
 - Arquitetura em camadas (**Model, Repository, Controller**)
-- Tipagem forte com **TypeScript**
+- Interfaces TypeScript como contratos de implementação
+- Tipagem forte com **TypeScript** e modo `strict`
 - Separação de responsabilidades
 - Boas práticas de código e organização modular
-- Simulação de regras financeiras
+- Simulação de regras financeiras com validações de saldo e limite
 - Validação de entradas e controle de fluxo
 - Interface CLI estilizada com arte ASCII e cores ANSI
+- Compatibilidade de encoding (CP850/UTF-8) para Windows
 - Estrutura pronta para evolução futura (API, DB, testes)
 
 <br />
 
 ## Funcionalidades do Projeto
 
-
-
-| Funcionalidade                    | Status |
-| --------------------------------- | ------ |
-| Criar conta bancária              | ✅      |
-| Listar todas as contas            | ✅      |
-| Buscar conta por número           | ✅      |
-| Atualizar dados da conta          | ✅      |
-| Apagar conta                      | ✅      |
-| Sacar                             | ✅      |
-| Depositar                         | ✅      |
-| Transferência entre contas        | ✅      |
-| Interface CLI interativa          | ✅      |
-| Arte ASCII e cores no terminal    | ✅      |
+| Funcionalidade                  | Status |
+| ------------------------------- | ------ |
+| Criar conta bancária            | ✅     |
+| Listar todas as contas          | ✅     |
+| Buscar conta por número         | ✅     |
+| Buscar conta por titular        | ✅     |
+| Atualizar dados da conta        | ✅     |
+| Apagar conta                    | ✅     |
+| Sacar                           | ✅     |
+| Depositar                       | ✅     |
+| Transferência entre contas      | ✅     |
+| Conta Corrente com limite       | ✅     |
+| Conta Poupança com aniversário  | ✅     |
+| Formatação monetária (BRL)      | ✅     |
+| Suporte a acentuação no Windows | ✅     |
+| Interface CLI interativa        | ✅     |
+| Arte ASCII e cores no terminal  | ✅     |
 
 <br />
 
 ## Diagrama de Classes
-
-
 
 ```mermaid
 classDiagram
@@ -100,11 +100,11 @@ class Conta {
   + get tipo() number
   + get titular() string
   + get saldo() number
-  + set numero(numero: number) void
-  + set agencia(agencia: number) void
-  + set tipo(tipo: number) void
-  + set titular(titular: string) void
-  + set saldo(saldo: number) void
+  + set numero(value: number) void
+  + set agencia(value: number) void
+  + set tipo(value: number) void
+  + set titular(value: string) void
+  + set saldo(value: number) void
   + sacar(valor: number) boolean
   + depositar(valor: number) void
   + visualizar() void
@@ -112,33 +112,88 @@ class Conta {
 class ContaCorrente {
   - _limite: number
   + get limite() number
-  + set limite(limite: number) void
+  + set limite(value: number) void
   + sacar(valor: number) boolean
   + visualizar() void
 }
 class ContaPoupanca {
   - _aniversario: number
   + get aniversario() number
-  + set aniversario(aniversario: number) void
+  + set aniversario(value: number) void
   + visualizar() void
 }
-ContaCorrente --> Conta
-ContaPoupanca --> Conta
+class ContaRepository {
+  <<interface>>
+  + procurarPorNumero(numero: number) void
+  + listarTodas() void
+  + cadastrar(conta: Conta) void
+  + atualizar(conta: Conta) void
+  + deletar(numero: number) void
+  + procurarPorTitular(titular: string) void
+  + sacar(numero: number, valor: number) void
+  + depositar(numero: number, valor: number) void
+  + transferir(numeroOrigem: number, numeroDestino: number, valor: number) void
+}
+class ContaController {
+  - listaContas: Array~Conta~
+  + numero: number
+  + procurarPorNumero(numero: number) void
+  + listarTodas() void
+  + cadastrar(conta: Conta) void
+  + atualizar(conta: Conta) void
+  + deletar(numero: number) void
+  + procurarPorTitular(titular: string) void
+  + sacar(numero: number, valor: number) void
+  + depositar(numero: number, valor: number) void
+  + transferir(numeroOrigem: number, numeroDestino: number, valor: number) void
+  + gerarNumero() number
+  + buscarNoArray(numero: number) Conta
+}
+class Input {
+  - configurado: boolean$
+  - encodingConsole: string$
+  - detectarEncoding()$ void
+  - converterParaConsole(texto: string)$ string
+  - converterDoConsole(textoRaw: string)$ string
+  - prepararConfig(config?: any)$ any
+  + question(pergunta: string, config?: any)$ string
+  + questionInt(pergunta: string, config?: any)$ number
+  + questionFloat(pergunta: string, config?: any)$ number
+  + keyInSelect(opcoes: string[], pergunta: string, config?: any)$ number
+  + keyInYNStrict(pergunta: string, config?: any)$ boolean
+  + prompt()$ void
+  + getEncoding()$ string
+}
+ContaCorrente --|> Conta
+ContaPoupanca --|> Conta
+ContaController ..|> ContaRepository
+ContaController --> Conta
 ```
 
 <br />
 
 ## Arquitetura do Projeto
 
-
-
 Estrutura organizada para facilitar **manutenção, escalabilidade e leitura técnica**:
 
 ```text
 📦 nexus-banking
+ ┣ 📂 docs
+ ┃ ┗ 📄 classe_input.md        # Documentação da Classe Input
  ┣ 📂 src
- ┃ ┗ 📂 util           # Utilidades e helpers (ex: Colors)
- ┣ 📜 Menu.ts          # Ponto de entrada principal
+ ┃ ┣ 📂 controller             # Regras de aplicação
+ ┃ ┃ ┗ 📄 ContaController.ts   # Implementa ContaRepository
+ ┃ ┣ 📂 model                  # Entidades de domínio
+ ┃ ┃ ┣ 📄 Conta.ts             # Classe base (Super Classe)
+ ┃ ┃ ┣ 📄 ContaCorrente.ts     # Herda Conta, adiciona limite
+ ┃ ┃ ┗ 📄 ContaPoupanca.ts     # Herda Conta, adiciona aniversário
+ ┃ ┣ 📂 repository             # Contrato de persistência
+ ┃ ┃ ┗ 📄 ContaRepository.ts   # Interface com métodos CRUD e bancários
+ ┃ ┗ 📂 util                   # Utilitários e helpers
+ ┃   ┣ 📄 Colors.ts            # Cores ANSI para o terminal
+ ┃   ┣ 📄 Currency.ts          # Formatação monetária BRL
+ ┃   ┗ 📄 Input.ts             # Leitura de dados com suporte a acentos
+ ┣ 📜 Menu.ts                  # Ponto de entrada principal
  ┣ 📜 package.json
  ┗ 📜 tsconfig.json
 ```
@@ -147,25 +202,27 @@ Estrutura organizada para facilitar **manutenção, escalabilidade e leitura té
 
 ## Tecnologias Utilizadas
 
+**Linguagem & Runtime**
 
+- TypeScript (modo `strict`, `nodenext`, `esnext`)
+- Node.js
+- ts-node
 
-- **Linguagem & Runtime**
+**Bibliotecas**
 
-  - TypeScript
-  - Node.js
-  - ts-node
+- readline-sync `^1.4.10` — input interativo no terminal
+- iconv-lite `^0.7.2` — conversão de encoding CP850/UTF-8
+- @types/node `^25.9.3` — tipagens do Node.js
 
-- **Ferramentas & Qualidade**
-  - readline-sync (input interativo no terminal)
-  - Git & GitHub
-  - Mermaid (diagramas UML)
-  - CLI interativa com cores ANSI (terminal)
+**Ferramentas & Qualidade**
+
+- Git & GitHub
+- Mermaid (diagramas UML)
+- CLI interativa com cores ANSI (terminal)
 
 <br />
 
 ## Como Executar
-
-
 
 **1️⃣ Clone o repositório**
 
@@ -195,20 +252,16 @@ ts-node Menu.ts
 
 ## Implementações Futuras
 
-
-
-- [ ]  Persistência com banco de dados
-- [ ]  Testes automatizados (Jest)
-- [ ]  API REST com NestJS
-- [ ]  Interface Web (React)
-- [ ]  Dockerização
-- [ ]  CI/CD com GitHub Actions
+- [ ] Persistência com banco de dados
+- [ ] Testes automatizados (Jest)
+- [ ] API REST com NestJS
+- [ ] Interface Web (React)
+- [ ] Dockerização
+- [ ] CI/CD com GitHub Actions
 
 <br />
 
 ## Contribuições
-
-
 
 Sugestões, melhorias e pull requests são bem-vindos.
 
@@ -223,15 +276,11 @@ Você pode contribuir com:
 
 ## Licença
 
-
-
 Este projeto está sob licença **MIT** — livre para uso educacional e profissional.
 
 <br />
 
 ## Autor
-
-
 
 **Sofia — Desenvolvedora Full Stack**
 
